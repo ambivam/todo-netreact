@@ -11,5 +11,19 @@ namespace TodoApi.Data
         }
 
         public DbSet<Todo> Todos { get; set; }
+        public DbSet<TodoComment> TodoComments { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Todo>()
+                .HasMany(t => t.Comments)
+                .WithOne(c => c.Todo)
+                .HasForeignKey(c => c.TodoId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Todo>()
+                .Property(t => t.Priority)
+                .HasDefaultValue(Priority.Medium);
+        }
     }
 } 
